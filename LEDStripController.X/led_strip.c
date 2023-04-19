@@ -1,6 +1,6 @@
-
 #include "led_strip.h"
 #include "mcc_generated_files/pin_manager.h"
+#include "bt_controller.h"
 
 Byte_t byteFrom(uint8_t n){
     Byte_t byte = {.byte = n};
@@ -34,4 +34,19 @@ inline void onePulse(void){
 inline void zeroPulse(void){
     DO_PIN = 1;
     DO_PIN = 0;
+}
+
+void getColorsFromTrace(BluetoothTrace_t * trace, Color_t colorArray[], uint8_t colorArrayLen){
+    bool finish = false;
+    uint8_t counter = 0;
+    for(uint8_t i=0;i<trace->len && !finish;i+=3){
+        if(counter < colorArrayLen && trace->len > i+2){
+            colorArray[counter].r = byteFrom(trace->data[i]);
+            colorArray[counter].g = byteFrom(trace->data[i+1]);
+            colorArray[counter].b = byteFrom(trace->data[i+2]);
+            counter++;
+        }else{
+            finish = true;
+        }
+    }
 }

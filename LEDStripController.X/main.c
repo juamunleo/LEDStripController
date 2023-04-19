@@ -43,6 +43,12 @@
 
 #include "mcc_generated_files/mcc.h"
 #include "led_strip.h"
+#include "bt_controller.h"
+
+#define NUM_LEDS 2
+
+BluetoothTrace_t trace = {0};
+Color_t leds[NUM_LEDS] = {0};
 
 /*
                          Main application
@@ -67,19 +73,13 @@ void main(void)
     // Disable the Peripheral Interrupts
     //INTERRUPT_PeripheralInterruptDisable();
     
-    Color_t redColor = {
-        .r = byteFrom(50),
-    };
-    
-    Color_t greenColor = {
-        .g = byteFrom(50),
-    };
-    
     while (1)
     {
-        writeColor(redColor);
-        writeColor(greenColor);
-        __delay_ms(500);
+        if(readBluetoothBuffer(&trace)){
+            getColorsFromTrace(&trace, leds, NUM_LEDS);
+        }
+        writeColor(leds[0]);
+        writeColor(leds[1]);
     }
 }
 /**

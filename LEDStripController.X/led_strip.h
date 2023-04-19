@@ -1,10 +1,3 @@
-/* 
- * File:   led_strip.h
- * Author: jm
- *
- * Created on April 16, 2023, 12:30 PM
- */
-
 #ifndef LED_STRIP_H
 #define	LED_STRIP_H
 
@@ -13,6 +6,7 @@ extern "C" {
 #endif
 
 #include "mcc_generated_files/mcc.h"
+#include "bt_controller.h"
     
 #define DO_PIN LATAbits.LATA0
     
@@ -40,6 +34,7 @@ inline void onePulse(void);
 inline void zeroPulse(void);
 inline void sendByte(Byte_t byte);
 inline void writeColor(Color_t);
+void getColorsFromTrace(BluetoothTrace_t* trace, Color_t colorArray[], uint8_t colorArrayLen);
 Byte_t byteFrom(uint8_t n);
 #ifdef	__cplusplus
 }
