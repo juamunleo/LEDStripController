@@ -12,3 +12,11 @@ bool readBluetoothBuffer(BluetoothTrace_t* trace){
     }
     return ret;
 }
+
+void writeBluetoothBuffer(const uint8_t data[], size_t dataLen){
+    while(!EUSART_is_tx_ready());
+    for(uint8_t i=0; i<dataLen; i++){
+        EUSART_Write(data[i]);
+        while(!EUSART_is_tx_done());
+    }
+}

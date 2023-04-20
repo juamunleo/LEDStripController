@@ -72,14 +72,16 @@ void main(void)
 
     // Disable the Peripheral Interrupts
     //INTERRUPT_PeripheralInterruptDisable();
-    
+               
     while (1)
     {
         if(readBluetoothBuffer(&trace)){
             getColorsFromTrace(&trace, leds, NUM_LEDS);
         }
-        writeColor(leds[0]);
-        writeColor(leds[1]);
+
+        for(uint8_t i=0; i<NUM_LEDS;i++){
+            writeColor(leds[i]);
+        }
     }
 }
 /**

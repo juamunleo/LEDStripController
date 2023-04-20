@@ -1,8 +1,6 @@
 
 import 'dart:async';
-import 'dart:developer';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 
 import '../const.dart';
@@ -12,6 +10,9 @@ class Device{
   String id;
   String name;
   QualifiedCharacteristic serialCharacteristic;
+  StreamSubscription connection;
+  bool disconnectedFromUser;
+  int numLeds;
 
   Device({required this.device}):
       id = device.id,
@@ -19,8 +20,11 @@ class Device{
       serialCharacteristic = QualifiedCharacteristic(
         characteristicId: CharacteristicUuids.serial,
         serviceId: ServiceUuids.serial,
-        deviceId: device.id
-      );
+        deviceId: device.id,
+      ),
+      connection = const Stream.empty().listen((event) { }),
+      disconnectedFromUser = false,
+      numLeds = 1;
 
   Future<void> writeCharacteristic(List<int> data) async {
     Globals.btInstance.writeCharacteristicWithoutResponse(serialCharacteristic, value: data);
@@ -30,8 +34,9 @@ class Device{
     Globals.btInstance.readCharacteristic(serialCharacteristic);
   }
 
-  StreamSubscription<ConnectionStateUpdate> connect({required Function() onConnected, Function()? onDisconnected}){
-    return Globals.btInstance.connectToDevice(id: id).listen((event) {
+  StreamSubscription connect({required Function() onConnected, Function()? onDisconnected, Function()? onDisconnectedFromUser}){
+    disconnectedFromUser = false;
+    connection = Globals.btInstance.connectToDevice(id: id).listen((event) {
       switch(event.connectionState){
         case DeviceConnectionState.connected:
           onConnected();
@@ -39,11 +44,24 @@ class Device{
 
         case DeviceConnectionState.disconnected:
           if(onDisconnected!=null){
-            onDisconnected();
+            if(!disconnectedFromUser){
+              onDisconnected();
+            }
+          }
+          if(onDisconnectedFromUser!=null){
+            if(disconnectedFromUser){
+              onDisconnectedFromUser();
+            }
           }
           break;
       }
     });
+    return connection;
+  }
+
+  Future<void> disconnect()  async {
+    disconnectedFromUser = true;
+    connection.cancel();
   }
 
   @override

@@ -30,6 +30,11 @@ typedef struct {
     Byte_t b;
 }Color_t;
 
+typedef enum {
+    ControlMode_Global=1,
+    ControlMode_Individual=2
+}ControlMode_t;
+
 inline void onePulse(void);
 inline void zeroPulse(void);
 inline void sendByte(Byte_t byte);

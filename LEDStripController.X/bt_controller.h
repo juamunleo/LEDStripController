@@ -11,6 +11,7 @@ typedef struct{
 }BluetoothTrace_t;
 
 bool readBluetoothBuffer(BluetoothTrace_t* trace);
+void writeBluetoothBuffer(const uint8_t data[], size_t dataLen);
 
 #ifdef	__cplusplus
 }
