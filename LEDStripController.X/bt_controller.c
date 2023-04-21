@@ -7,6 +7,7 @@ bool readBluetoothBuffer(BluetoothTrace_t* trace){
         ret = true;
         trace->len = EUSART_Read();
         for(uint8_t i=0; i<trace->len;i++){
+            while(!EUSART_is_rx_ready());
             trace->data[i] = EUSART_Read();
         }
     }

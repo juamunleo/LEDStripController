@@ -1,5 +1,6 @@
 
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 
@@ -12,7 +13,7 @@ class Device{
   QualifiedCharacteristic serialCharacteristic;
   StreamSubscription connection;
   bool disconnectedFromUser;
-  int numLeds;
+  List<Color> leds;
 
   Device({required this.device}):
       id = device.id,
@@ -24,7 +25,7 @@ class Device{
       ),
       connection = const Stream.empty().listen((event) { }),
       disconnectedFromUser = false,
-      numLeds = 1;
+      leds = List.empty(growable: true);
 
   Future<void> writeCharacteristic(List<int> data) async {
     Globals.btInstance.writeCharacteristicWithoutResponse(serialCharacteristic, value: data);
