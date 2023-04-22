@@ -55,37 +55,30 @@ class ControlStripState extends State<ControlStrip> {
               individual()
             ],
           ),
-          floatingActionButton: tabIndex != 1?null:FloatingActionButton(
-            child: const Icon(Icons.add),
-            onPressed: (){
-              setState(() {
-                widget.device.leds.add(Colors.white);
-              });
-            },
-          ),
+          floatingActionButton: tabIndex != 1?null:floatingButton()
         ),
       )
     );
   }
 
   Widget global(){
-      return Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            const Text("Selecciona un color", style: TextStyle(fontSize: 30)),
-            const SizedBox(height: 30),
-            ColorPicker(
-                enableAlpha: false,
-                paletteType: PaletteType.hueWheel,
-                pickerColor: Colors.white,
-                onColorChanged: (Color color){
-                  widget.device.writeCharacteristic([4,1,color.red, color.green, color.blue]);
-                }
-            ),
-          ],
-        )
-      );
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: ListView(
+        children: [
+          const Text("Selecciona un color", style: TextStyle(fontSize: 30)),
+          const SizedBox(height: 30),
+          ColorPicker(
+            enableAlpha: false,
+            paletteType: PaletteType.hueWheel,
+            pickerColor: Colors.white,
+            onColorChanged: (Color color){
+              widget.device.writeCharacteristic([4,1,color.red, color.green, color.blue]);
+            }
+          )
+        ],
+      )
+    );
   }
 
   Widget individual(){
@@ -107,6 +100,7 @@ class ControlStripState extends State<ControlStrip> {
                       context: context,
                       builder: (BuildContext context) => Dialog(
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+                        elevation: 10,
                         child: Wrap(
                           children: [
                             ColorPicker(
@@ -117,15 +111,8 @@ class ControlStripState extends State<ControlStrip> {
                                   setState(() {
                                     widget.device.leds[i] = color;
                                   });
-                                  List<int> valuesToSend = List.empty(growable: true);
-                                  valuesToSend.add(1+(widget.device.leds.length*3));
-                                  valuesToSend.add(2);
-                                  for(int j=0; j<widget.device.leds.length; j++){
-                                    valuesToSend.add(widget.device.leds.elementAt(j).red);
-                                    valuesToSend.add(widget.device.leds.elementAt(j).green);
-                                    valuesToSend.add(widget.device.leds.elementAt(j).blue);
-                                  }
-                                  widget.device.writeCharacteristic(valuesToSend);
+                                  List<int> trace = widget.device.individualTrace();
+                                  widget.device.writeCharacteristic(trace);
                                 }
                             ),
                           ],
@@ -140,6 +127,15 @@ class ControlStripState extends State<ControlStrip> {
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(20)),
                       color: widget.device.leds.elementAt(i),
+                      boxShadow: const [BoxShadow(offset: Offset(1,1))]
+                    ),
+                    child: Center(
+                      child: Text("${i+1}",
+                        style: const TextStyle(
+                          shadows: [Shadow(offset: Offset(1, 1))],
+                          fontSize: 20
+                        )
+                      )
                     ),
                   ),
                 )
@@ -147,6 +143,54 @@ class ControlStripState extends State<ControlStrip> {
           )
         ]
       )
+    );
+  }
+
+  Widget floatingButton(){
+    Color colorPicked = Colors.white;
+    return FloatingActionButton(
+      child: const Icon(Icons.add),
+      onPressed: (){
+        showDialog(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+              elevation: 10,
+              actions: [
+                TextButton(
+                  child: const Text("Cancelar"),
+                  onPressed: (){
+                    Navigator.pop(context);
+                  },
+                ),
+                TextButton(
+                  child: const Text("Aceptar"),
+                  onPressed: () {
+                    setState(() {
+                      widget.device.leds.add(colorPicked);
+                      List<int> trace = widget.device.individualTrace();
+                      widget.device.writeCharacteristic(trace);
+                      widget.device.writeCharacteristic(trace);
+                      Navigator.pop(context);
+                    });
+                  }
+                )
+              ],
+              content: Wrap(
+                children: [
+                  ColorPicker(
+                      enableAlpha: false,
+                      paletteType: PaletteType.hueWheel,
+                      pickerColor: Colors.white,
+                      onColorChanged: (Color color){
+                        colorPicked = color;
+                      }
+                  ),
+                ],
+              ),
+            )
+        );
+      },
     );
   }
 }

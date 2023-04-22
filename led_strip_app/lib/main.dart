@@ -16,7 +16,15 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        brightness: Brightness.dark
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: const Color(0xFF4B1BA6),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFF2C0047)
+        ),
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: Colors.deepPurpleAccent.shade400,
+          foregroundColor: Colors.white
+        ),
       ),
       home: const DeviceList()
     );

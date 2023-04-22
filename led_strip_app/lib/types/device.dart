@@ -65,6 +65,18 @@ class Device{
     connection.cancel();
   }
 
+  List<int> individualTrace(){
+    List<int> trace = List.empty(growable: true);
+    trace.add(1+(leds.length*3));
+    trace.add(2);
+    for(int j=0; j<leds.length; j++){
+      trace.add(leds.elementAt(j).red);
+      trace.add(leds.elementAt(j).green);
+      trace.add(leds.elementAt(j).blue);
+    }
+    return trace;
+  }
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
