@@ -38,7 +38,7 @@ inline void zeroPulse(void){
 
 void getColorsFromTrace(BluetoothTrace_t * trace, Color_t colorArray[], uint8_t colorArrayLen){
     bool finish = false;
-    uint8_t counter = 0;
+    uint8_t ledSelected = 0;
     switch(trace->data[0]){
         case ControlMode_Global:
             if(trace->len >= 4){
@@ -51,15 +51,11 @@ void getColorsFromTrace(BluetoothTrace_t * trace, Color_t colorArray[], uint8_t 
             break;
             
         case ControlMode_Individual:
-            for(uint8_t i=1;i<trace->len && !finish;i+=3){
-                if(counter < colorArrayLen && trace->len > i+2){
-                    colorArray[counter].r = byteFrom(trace->data[i]);
-                    colorArray[counter].g = byteFrom(trace->data[i+1]);
-                    colorArray[counter].b = byteFrom(trace->data[i+2]);
-                    counter++;
-                }else{
-                    finish = true;
-                }
+            ledSelected = trace->data[1];
+            if(trace->len >= 5){
+                colorArray[ledSelected].r = byteFrom(trace->data[2]);
+                colorArray[ledSelected].g = byteFrom(trace->data[3]);
+                colorArray[ledSelected].b = byteFrom(trace->data[4]);
             }
             break;
             

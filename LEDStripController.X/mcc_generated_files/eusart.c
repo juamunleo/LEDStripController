@@ -76,11 +76,11 @@ void EUSART_Initialize(void)
     // TX9 8-bit; TX9D 0; SENDB sync_break_complete; TXEN enabled; SYNC asynchronous; BRGH hi_speed; CSRC slave; 
     TX1STA = 0x24;
 
-    // SP1BRGL 160; 
-    SPBRGL = 0xA0;
+    // SP1BRGL 8; 
+    SPBRGL = 0x08;
 
-    // SP1BRGH 1; 
-    SPBRGH = 0x01;
+    // SP1BRGH 2; 
+    SPBRGH = 0x02;
 
 
     EUSART_SetFramingErrorHandler(EUSART_DefaultFramingErrorHandler);

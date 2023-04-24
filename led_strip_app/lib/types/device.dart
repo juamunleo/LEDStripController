@@ -65,14 +65,15 @@ class Device{
     connection.cancel();
   }
 
-  List<int> individualTrace(){
+  List<int> individualTrace(int led){
     List<int> trace = List.empty(growable: true);
-    trace.add(1+(leds.length*3));
-    trace.add(2);
-    for(int j=0; j<leds.length; j++){
-      trace.add(leds.elementAt(j).red);
-      trace.add(leds.elementAt(j).green);
-      trace.add(leds.elementAt(j).blue);
+    if(leds.length > led){
+      trace.add(5);
+      trace.add(2);
+      trace.add(led);
+      trace.add(leds.elementAt(led).red);
+      trace.add(leds.elementAt(led).green);
+      trace.add(leds.elementAt(led).blue);
     }
     return trace;
   }

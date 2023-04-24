@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:led_strip_app/screens/device_list.dart';
 
+import 'const.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -17,14 +19,22 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         brightness: Brightness.dark,
-        scaffoldBackgroundColor: const Color(0xFF4B1BA6),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFF2C0047)
+        scaffoldBackgroundColor: AppColors.background,
+        indicatorColor: Colors.white,
+        appBarTheme: AppBarTheme(
+          backgroundColor: AppColors.element,
+          elevation: 10
         ),
         floatingActionButtonTheme: FloatingActionButtonThemeData(
-          backgroundColor: Colors.deepPurpleAccent.shade400,
-          foregroundColor: Colors.white
+          backgroundColor: AppColors.element,
+          foregroundColor: Colors.white,
+          elevation: 10
         ),
+        cardTheme: CardTheme(
+          color: AppColors.element,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          elevation: 10
+        )
       ),
       home: const DeviceList()
     );

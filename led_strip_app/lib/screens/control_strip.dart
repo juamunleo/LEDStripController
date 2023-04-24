@@ -66,7 +66,7 @@ class ControlStripState extends State<ControlStrip> {
       padding: const EdgeInsets.all(20),
       child: ListView(
         children: [
-          const Text("Selecciona un color", style: TextStyle(fontSize: 30)),
+          const Text("Selecciona un color", style: TextStyle(fontSize: 30), textAlign: TextAlign.center),
           const SizedBox(height: 30),
           ColorPicker(
             enableAlpha: false,
@@ -111,7 +111,7 @@ class ControlStripState extends State<ControlStrip> {
                                   setState(() {
                                     widget.device.leds[i] = color;
                                   });
-                                  List<int> trace = widget.device.individualTrace();
+                                  List<int> trace = widget.device.individualTrace(i);
                                   widget.device.writeCharacteristic(trace);
                                 }
                             ),
@@ -168,7 +168,7 @@ class ControlStripState extends State<ControlStrip> {
                   onPressed: () {
                     setState(() {
                       widget.device.leds.add(colorPicked);
-                      List<int> trace = widget.device.individualTrace();
+                      List<int> trace = widget.device.individualTrace(widget.device.leds.length-1);
                       widget.device.writeCharacteristic(trace);
                       widget.device.writeCharacteristic(trace);
                       Navigator.pop(context);
