@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
+import '../const.dart';
 import '../types/device.dart';
+
 
 class ControlStrip extends StatefulWidget {
   const ControlStrip({super.key, required this.device});
@@ -13,6 +15,9 @@ class ControlStrip extends StatefulWidget {
 }
 class ControlStripState extends State<ControlStrip> {
   int tabIndex = 0;
+  int animation =  LedAnimation.none;
+  Color selectedColor = Colors.white;
+  double animationSpeed = 5;
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -71,10 +76,60 @@ class ControlStripState extends State<ControlStrip> {
           ColorPicker(
             enableAlpha: false,
             paletteType: PaletteType.hueWheel,
-            pickerColor: Colors.white,
+            pickerColor: selectedColor,
             onColorChanged: (Color color){
+              setState(() {
+                selectedColor = color;
+              });
               widget.device.writeCharacteristic([4,1,color.red, color.green, color.blue]);
             }
+          ),
+          const SizedBox(height: 30),
+          Center(
+            child: Wrap(
+              spacing: 8.0,
+              children: [
+                FilterChip(
+                  label: const Text("Sin animación"),
+                  selected: animation == LedAnimation.none,
+                  backgroundColor: Colors.deepPurple.shade600,
+                  selectedColor: Colors.deepPurple.shade300,
+                  onSelected: (bool value) {
+                    setState(() {
+                      animation = LedAnimation.none;
+                    });
+                    widget.device.writeCharacteristic([2,3,animation]);
+                  },
+                ),
+                FilterChip(
+                  label: const Text("Pulsos"),
+                  selected: animation == LedAnimation.pulse,
+                  backgroundColor: Colors.deepPurple.shade600,
+                  selectedColor: Colors.deepPurple.shade300,
+                  onSelected: (bool value) {
+                    setState(() {
+                      animation = LedAnimation.pulse;
+                    });
+                    widget.device.writeCharacteristic([2,3,animation]);
+                  },
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 10),
+          Slider(
+            value: animationSpeed,
+            onChanged: animation == LedAnimation.none?null:(value) {
+              setState(() {
+                animationSpeed = value;
+              });
+              widget.device.writeCharacteristic([2,04,animationSpeed.toInt()]);
+            },
+            min: 0,
+            max: 10,
+            divisions: 10,
+            label: "Velocidad: $animationSpeed",
+            activeColor: Colors.white,
           )
         ],
       )

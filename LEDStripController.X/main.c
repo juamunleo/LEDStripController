@@ -47,8 +47,11 @@
 
 #define NUM_LEDS 2
 
-BluetoothTrace_t trace = {0};
-Color_t leds[NUM_LEDS] = {0};
+BluetoothTrace_t trace;
+Color_t leds[NUM_LEDS], leds_animated[NUM_LEDS];
+Animation_t animationSelected;
+AnimationStep_t animationStep[NUM_LEDS];
+uint8_t timerOverflows, animationSpeed = 5;
 
 /*
                          Main application
@@ -72,15 +75,32 @@ void main(void)
 
     // Disable the Peripheral Interrupts
     //INTERRUPT_PeripheralInterruptDisable();
-               
+            
+    initAnimationController();
+    
     while (1)
     {
         if(readBluetoothBuffer(&trace)){
-            getColorsFromTrace(&trace, leds, NUM_LEDS);
+            getColorsFromTrace(&trace, leds, leds_animated, NUM_LEDS, &animationSelected, &animationSpeed);
+            timerOverflows = 0;
+        }
+        
+        if(TMR5IF && animationSelected != Animation_None){
+            if(timerOverflows >= animationSpeed){
+                for(uint8_t i=0; i<NUM_LEDS;i++){
+                    animationController(&leds_animated[i], leds[i], Animation_Pulse, &animationStep[i]);
+                }
+                timerOverflows = 0;
+            }else{
+                timerOverflows++;
+            }
+            //Reload timer
+            TMR5IF = 0;
+            TMR5_Reload();
         }
 
         for(uint8_t i=0; i<NUM_LEDS;i++){
-            writeColor(leds[i]);
+            writeColor(leds_animated[i]);
         }
     }
 }

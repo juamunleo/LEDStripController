@@ -1,8 +1,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
+
+class LedAnimation{
+  static int none = 0;
+  static int pulse = 2;
+}
 
 class Globals{
   static final FlutterReactiveBle btInstance = FlutterReactiveBle();
