@@ -67,11 +67,11 @@ void TMR5_Initialize(void)
     //GSS T5G_pin; TMR5GE disabled; T5GTM disabled; T5GPOL low; T5GGO_nDONE done; T5GSPM disabled; 
     T5GCON = 0x00;
 
-    //TMR 252; 
-    TMR5H = 0xFC;
-
     //TMR 249; 
-    TMR5L = 0xF9;
+    TMR5H = 0xF9;
+
+    //TMR 242; 
+    TMR5L = 0xF2;
 
     // Clearing IF flag.
     PIR4bits.TMR5IF = 0;

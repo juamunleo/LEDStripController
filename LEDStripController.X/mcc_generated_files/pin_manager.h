@@ -85,6 +85,26 @@
 #define DO_SetAnalogMode()      do { ANSELAbits.ANSA0 = 1; } while(0)
 #define DO_SetDigitalMode()     do { ANSELAbits.ANSA0 = 0; } while(0)
 
+// get/set LED aliases
+#define LED_TRIS                 TRISAbits.TRISA1
+#define LED_LAT                  LATAbits.LATA1
+#define LED_PORT                 PORTAbits.RA1
+#define LED_WPU                  WPUAbits.WPUA1
+#define LED_OD                   ODCONAbits.ODA1
+#define LED_ANS                  ANSELAbits.ANSA1
+#define LED_SetHigh()            do { LATAbits.LATA1 = 1; } while(0)
+#define LED_SetLow()             do { LATAbits.LATA1 = 0; } while(0)
+#define LED_Toggle()             do { LATAbits.LATA1 = ~LATAbits.LATA1; } while(0)
+#define LED_GetValue()           PORTAbits.RA1
+#define LED_SetDigitalInput()    do { TRISAbits.TRISA1 = 1; } while(0)
+#define LED_SetDigitalOutput()   do { TRISAbits.TRISA1 = 0; } while(0)
+#define LED_SetPullup()          do { WPUAbits.WPUA1 = 1; } while(0)
+#define LED_ResetPullup()        do { WPUAbits.WPUA1 = 0; } while(0)
+#define LED_SetPushPull()        do { ODCONAbits.ODA1 = 0; } while(0)
+#define LED_SetOpenDrain()       do { ODCONAbits.ODA1 = 1; } while(0)
+#define LED_SetAnalogMode()      do { ANSELAbits.ANSA1 = 1; } while(0)
+#define LED_SetDigitalMode()     do { ANSELAbits.ANSA1 = 0; } while(0)
+
 // get/set RC4 procedures
 #define RC4_SetHigh()            do { LATCbits.LATC4 = 1; } while(0)
 #define RC4_SetLow()             do { LATCbits.LATC4 = 0; } while(0)

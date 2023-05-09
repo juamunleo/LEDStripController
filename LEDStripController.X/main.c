@@ -78,6 +78,10 @@ void main(void)
             
     initAnimationController();
     
+    LED_SetHigh();
+    __delay_ms(300);
+    LED_SetLow();
+    
     while (1)
     {
         if(readBluetoothBuffer(&trace)){
