@@ -122,6 +122,9 @@ class DeviceListState extends State<DeviceList> {
       case BleStatus.ready:
           w = deviceList();
         break;
+
+      default:
+        break;
     }
 
     return w;

@@ -55,6 +55,9 @@ class Device{
             }
           }
           break;
+
+          default:
+          break;
       }
     });
     return connection;
